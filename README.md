@@ -19,4 +19,7 @@ Install:
 3) Click on "Edit", add module position and check something) 
 
 ==============
+
+Works 100% on 1.5.3.1 or 1.5.4.1 and 90% on others)
+
 Additional description 
