@@ -42,7 +42,11 @@ class ControllerModuleAlphabeticallyProducts extends Controller{
 		$this->data['onlytxt'] = $this->language->get('onlytxt');  
 		$this->data['settxt'] = $this->language->get('settxt');
 		$this->data['numtxt'] = $this->language->get('numtxt');  
-		$this->data['linetxt'] = $this->language->get('linetxt'); 		
+		$this->data['linetxt'] = $this->language->get('linetxt'); 
+
+		$this->data['from_currenttxt'] = $this->language->get('from_currenttxt'); 
+		$this->data['from_currenttxt2'] = $this->language->get('from_currenttxt2'); 
+		$this->data['title'] = $this->language->get('title'); 		
 		
 		
  		if (isset($this->error['warning'])) {

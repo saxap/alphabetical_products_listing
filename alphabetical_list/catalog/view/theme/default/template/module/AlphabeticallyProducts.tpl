@@ -14,7 +14,7 @@ height: 2px;
 }
 </style>
 <div class="box">
-  <div class="box-heading"><?php echo $heading_title; ?></div>
+  <div class="box-heading"><?php echo $title; ?></div>
   <div class="box-content">    
 	  <div class="box-alphabeticallyproducts">      		  
 		  <div valign="top">	

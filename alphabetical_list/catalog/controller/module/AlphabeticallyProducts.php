@@ -1,57 +1,77 @@
 <?php
 class ControllerModuleAlphabeticallyProducts extends Controller{
     
-    protected function index(){
+    protected function index($setting){
         
 		$this->load->model('setting/setting');
         $this->language->load('module/AlphabeticallyProducts');
         $this->load->model('catalog/AlphabeticallyProducts');
-        $this->data['heading_title'] = $this->language->get('heading_title');
+        $this->data['heading_title'] = $this->language->get('heading_title');		
+		
+        $this->data['href'] = HTTP_SERVER . 'index.php?route=product/AlphabeticallyProducts';
+		$this->data['title'] = $setting['title'];
 
-	
-		if ($this->request->server['REQUEST_METHOD'] == 'POST') {
-			$this->model_setting_setting->editSetting('lat', $this->request->post);		
-			$this->model_setting_setting->editSetting('cyr', $this->request->post);	
-			$this->model_setting_setting->editSetting('only', $this->request->post);
-
-		if (isset($this->request->post['lat'])) {
-			$this->data['lat'] = $this->request->post['lat'];
+		if (isset($this->request->get['route'])) {
+			$route = $this->request->get['route'];
 		} else {
-			$this->data['lat'] = $this->config->get('lat');
-		}	
-
-		if (isset($this->request->post['cyr'])) {
-			$this->data['cyr'] = $this->request->post['cyr'];
-		} else {
-			$this->data['cyr'] = $this->config->get('cyr');
-		}	
-		
-		if (isset($this->request->post['only'])) {
-			$this->data['only'] = $this->request->post['only'];
-		} else {
-			$this->data['only'] = $this->config->get('only');
-		}	
-		
-		if (isset($this->request->post['num'])) {
-			$this->data['num'] = $this->request->post['num'];
-		} else {
-			$this->data['num'] = $this->config->get('num');
-		}	
-		
-		if (isset($this->request->post['line'])) {
-			$this->data['line'] = $this->request->post['line'];
-		} else {
-			$this->data['line'] = $this->config->get('line');
-		}	
-		
-			$this->session->data['success'] = $this->language->get('text_success');
-						
-			$this->redirect($this->url->link('extension/module', 'token=' . $this->session->data['token'], 'SSL'));
+			$route = '';
 		}
-		
-		
-        $this->data['href'] = HTTP_SERVER . 'index.php?route=product/AlphabeticallyProducts&char=';
-		
+
+		if (isset($setting['from_current'])) {
+			if ((isset($this->request->get['path']) && $id = $this->request->get['path']) || (isset($this->request->get['category']) && $id = $this->request->get['category'])) {
+				$this->data['href'] .= '&category='.$id;
+				$parts = explode('_', $id);
+				$category_id = array_pop($parts);
+			} else {
+				$category_id = false;
+			}
+			if ((isset($this->request->get['manufacturer_id']) && $id = $this->request->get['manufacturer_id']) || (isset($this->request->get['manufacturer']) && $id = $this->request->get['manufacturer'])) {
+				$this->data['href'] .= '&manufacturer='.$id;
+				$manufacturer_id = $id;
+			} else {
+				$manufacturer_id = false;
+			}
+			if (isset($this->request->get['filter_name'])) {
+				$this->data['href'] .= '&filter_name='.$this->request->get['filter_name'];
+				$filter_name = $this->request->get['filter_name'];
+			} else {
+				$filter_name = false;
+			}
+			if (isset($this->request->get['filter_tag'])) {
+				$this->data['href'] .= '&filter_tag='.$this->request->get['filter_tag'];
+				$filter_tag = $this->request->get['filter_tag'];
+			} else {
+				$filter_tag = false;
+			}
+
+			//dlya poiska
+			if (isset($this->request->get['filter_description'])) {
+				$this->data['href'] .= '&filter_description=' . $this->request->get['filter_description'];
+				$filter_description = $this->request->get['filter_description'];
+			} else {
+				$filter_description = false;
+			}
+			if (isset($this->request->get['filter_category_id'])) {
+				$this->data['href'] .= '&filter_category_id=' . $this->request->get['filter_category_id'];
+				$category_id = $this->request->get['filter_category_id'];
+			}
+			if (isset($this->request->get['filter_sub_category'])) {
+				$this->data['href'] .= '&filter_sub_category=' . $this->request->get['filter_sub_category'];
+				$filter_sub_category = $this->request->get['filter_sub_category'];
+			} else {
+				$filter_sub_category = false;
+			}
+
+			if ($route == 'product/special' || isset($this->request->get['special'])) {
+				$this->data['href'] = $this->data['href'].'&special=1';
+				$special = true;
+			} else {
+				$special = false;
+			}
+		}
+
+		$this->data['href'] .= '&char=';
+
 		if ( $this->config->get('only') == 0 ) {
 			
 			$this->data['lat_letters'] = array( 0 => 'A', 1 => 'B', 2 => 'C', 3 => 'D', 4 => 'E', 5 => 'F', 6 => 'G',
@@ -67,22 +87,36 @@ class ControllerModuleAlphabeticallyProducts extends Controller{
 			$this->data['numbers'] = '0-9';
 		
 		} else {
-			$allletters = $this->model_catalog_AlphabeticallyProducts->getletters();
-			if (isset($allletters['lat'])) {
-			$this->data['lat_letters'] = $allletters['lat'];
+
+			if (isset($setting['from_current'])) {
+				$data = array(
+					'filter_category_id' => $category_id,
+					'filter_manufacturer_id' => $manufacturer_id,
+					'filter_name'         => $filter_name, 
+					'filter_tag'          => $filter_tag, 
+					'filter_description'  => $filter_description,
+					'filter_sub_category' => $filter_sub_category,
+					'special'			  => $special
+				);
+				$allletters = $this->model_catalog_AlphabeticallyProducts->getletters($data);
 			} else {
-			$this->data['lat_letters'] = array();
+				$allletters = $this->model_catalog_AlphabeticallyProducts->getletters();
+			}
+			if (isset($allletters['lat'])) {
+				$this->data['lat_letters'] = $allletters['lat'];
+			} else {
+				$this->data['lat_letters'] = array();
 			}
 			if (isset($allletters['cyr'])) {
 			$this->data['cyr_letters'] = $allletters['cyr'];
 			} else {
-			$this->data['cyr_letters'] = array();
+				$this->data['cyr_letters'] = array();
 			}
-			//print_r($allletters);
+
 			if (isset($allletters['number']) && (count($allletters['number']) != 0)) {		
-			$this->data['numbers'] = '0-9';		
+				$this->data['numbers'] = '0-9';		
 			} else {
-			$this->data['numbers'] = '';	
+				$this->data['numbers'] = '';	
 			}
 			
 		}

@@ -68,6 +68,8 @@
           <tr>
             <td class="left"><?php echo $entry_layout; ?></td>
             <td class="left"><?php echo $entry_position; ?></td>
+            <td class="left"><?php echo $title; ?></td>
+            <td class="left"><?php echo $from_currenttxt; ?></td>
             <td class="left"><?php echo $entry_status; ?></td>
             <td class="left"><?php echo $entry_sort_order; ?></td>
             <td></td>
@@ -108,6 +110,20 @@
                 <option value="column_right"><?php echo $text_column_right; ?></option>
                 <?php } ?>
               </select></td>
+            <td class="left">
+              <label>
+                <input type="text" name="AlphabeticallyProducts_module[<?php echo $module_row; ?>][title]" value="<?php echo $module['title']; ?>" size="25"/>
+              </label>
+            </td>
+            <td class="left">
+              <label>
+                <?php if (!isset($module['from_current'])) { ?>
+                <input type="checkbox" value="1" name="AlphabeticallyProducts_module[<?php echo $module_row; ?>][from_current]"/>
+                <?php } else { ?>
+                <input type="checkbox" value="1" name="AlphabeticallyProducts_module[<?php echo $module_row; ?>][from_current]" checked="checked"/>
+                <?php } ?>
+              </label>
+            </td>
             <td class="left"><select name="AlphabeticallyProducts_module[<?php echo $module_row; ?>][status]">
                 <?php if ($module['status']) { ?>
                 <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
@@ -125,11 +141,12 @@
         <?php } ?>
         <tfoot>
           <tr>
-            <td colspan="4"></td>
+            <td colspan="6"></td>
             <td class="left"><a onclick="addModule();" class="button"><span><?php echo $button_add_module; ?></span></a></td>
           </tr>
         </tfoot>
       </table>
+      <span><?php echo $from_currenttxt2; ?></span>
 	 <a href="http://dontforget.pro" target="_blank" style="float: right;">Developed by saxa:p</a>
     </form>
   </div>
@@ -151,6 +168,11 @@ function addModule() {
 	html += '      <option value="column_left"><?php echo $text_column_left; ?></option>';
 	html += '      <option value="column_right"><?php echo $text_column_right; ?></option>';
 	html += '    </select></td>';
+  html += '           <td class="left"><label>';
+  html += '           <input type="text" name="AlphabeticallyProducts_module[' + module_row + '][title]" value="" size="25"/></label></td>';
+  html += '          <td class="left"><label>';
+  html += '              <input type="checkbox" value="1" name="AlphabeticallyProducts_module[' + module_row + '][from_current]"/>';
+  html += '            </label></td>';
 	html += '    <td class="left"><select name="AlphabeticallyProducts_module[' + module_row + '][status]">';
     html += '      <option value="1" selected="selected"><?php echo $text_enabled; ?></option>';
     html += '      <option value="0"><?php echo $text_disabled; ?></option>';

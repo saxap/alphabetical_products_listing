@@ -1,16 +1,11 @@
 <?php
 class ControllerProductAlphabeticallyProducts extends Controller{
-    
-// private $page_limit = 9999999999999999999999999999;
-    
+        
     public function index(){
         
-        $this->language->load('product/category');
-		            
+        $this->language->load('product/category');       
         $this->language->load('product/AlphabeticallyProducts');
-        
         $this->load->model('catalog/AlphabeticallyProducts');
-     /*   	$this->load->model('catalog/product');*/
         $this->load->model('tool/image');
         
 
@@ -46,10 +41,43 @@ class ControllerProductAlphabeticallyProducts extends Controller{
        		'separator' => false
    		);	
 			
-/*		if (isset($this->request->get['path'])) {
+	
+		if(isset($this->request->get['char'])) {
+   			$char = $this->request->get['char'];                   
+            if (isset($this->request->get['page'])) {
+				$page = $this->request->get['page'];
+			} else { 
+				$page = 1;
+			}
+            
+	    
+	    if ($char == '' ){
+            $title = str_replace('%char',mb_strtoupper($char),$this->language->get('bad_char'));
+        } else {
+            $title = str_replace('%char',mb_strtoupper($char),$this->language->get('heading_title'));
+        }                
+            
+        $this->document->setTitle($title);
+            
+        $this->data['heading_title'] = $title;              
+            
+        $this->data['breadcrumbs'] = array();
+        $this->data['href'] = HTTP_SERVER;
+                
+
+		$this->data['breadcrumbs'][] = array(
+				'text'      => $this->language->get('text_home'),
+				'href'      => $this->url->link('common/home'),			
+				'separator' => false
+		);
+
+		$url = '';
+
+		//КАТЕГОРИИ
+		if (isset($this->request->get['category'])) {
 			$path = '';
-		
-			$parts = explode('_', (string)$this->request->get['path']);
+			$this->load->model('catalog/category');
+			$parts = explode('_', (string)$this->request->get['category']);
 		
 			foreach ($parts as $path_id) {
 				if (!$path) {
@@ -71,45 +99,103 @@ class ControllerProductAlphabeticallyProducts extends Controller{
 		
 			$category_id = array_pop($parts);
 		} else {
-			$category_id = 0;
+			$category_id = false;
 		}
-*/
-	
 
-		
-if(isset($this->request->get['char'])){
-    $char = $this->request->get['char'];            
-            
-            if (isset($this->request->get['page'])) {
-			$page = $this->request->get['page'];
-		} else { 
-			$page = 1;
+		// ПРОИЗВОДИТЕЛЬ
+		if (isset($this->request->get['manufacturer'])) {
+
+			$this->load->model('catalog/manufacturer');
+			$this->language->load('product/manufacturer');
+			$manufacturer_id = $this->request->get['manufacturer'];
+
+	   		
+			$this->data['breadcrumbs'][] = array( 
+	       		'text'      => $this->language->get('text_brand'),
+				'href'      => $this->url->link('product/manufacturer'),
+	      		'separator' => $this->language->get('text_separator')
+	   		);
+
+			$manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($manufacturer_id);
+
+			if ($manufacturer_info) {
+				$this->data['breadcrumbs'][] = array(
+	       			'text'      => $manufacturer_info['name'],
+					'href'      => $this->url->link('product/manufacturer/product', 'manufacturer_id=' . $this->request->get['manufacturer']),
+	      			'separator' => $this->language->get('text_separator')
+	   			);
+	        }
+
+        } else {
+        	$manufacturer_id = false;
+        }
+
+        // ПОИСК
+        if (isset($this->request->get['filter_name']) || isset($this->request->get['filter_tag'])) {
+        	$this->language->load('product/search');
+	        if (isset($this->request->get['filter_name'])) {
+				$filter_name = $this->request->get['filter_name'];
+				$url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+			} else {
+				$filter_name = '';
+			} 			
+			if (isset($this->request->get['filter_tag'])) {
+				$filter_tag = $this->request->get['filter_tag'];
+				$url .= '&filter_tag=' . urlencode(html_entity_decode($this->request->get['filter_tag'], ENT_QUOTES, 'UTF-8'));
+			} elseif (isset($this->request->get['filter_name'])) {
+				$filter_tag = $this->request->get['filter_name'];
+				$url .= '&filter_tag=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+			} else {
+				$filter_tag = '';
+			} 					
+			if (isset($this->request->get['filter_description'])) {
+				$filter_description = $this->request->get['filter_description'];
+				$url .= '&filter_description=' . $this->request->get['filter_description'];
+			} else {
+				$filter_description = '';
+			} 				
+			if (isset($this->request->get['filter_category_id'])) {
+				$category_id = $this->request->get['filter_category_id'];
+				$url .= '&filter_category_id=' . $this->request->get['filter_category_id'];
+			} else {
+				$category_id = false;
+			} 	
+			if (isset($this->request->get['filter_sub_category'])) {
+				$filter_sub_category = $this->request->get['filter_sub_category'];
+				$url .= '&filter_sub_category=' . $this->request->get['filter_sub_category'];
+			} else {
+				$filter_sub_category = '';
+			} 
+
+			$this->data['breadcrumbs'][] = array(
+       		'text'      => $this->language->get('heading_title'),
+			'href'      => $this->url->link('product/search', $url),
+      		'separator' => $this->language->get('text_separator')
+   			);
+
+		} else {
+			$filter_name = false;
+			$filter_tag = false;
+			$filter_description = false;
+			$filter_sub_category = false;
 		}
-            
-    //   $results1 = $this->model_catalog_AlphabeticallyProducts->get_selected_products($char,0,999999999999999999);
-     //  echo sizeof($results1);
-	    
-	    if ($char==''){
-                $title = "На эту букву не может существовать товаров";  
-            } else {
-                $title = str_replace('%char',mb_strtoupper($char),$this->language->get('heading_title'));
-            }                
-            
-                $this->document->setTitle($title);
-                
-                $this->data['heading_title'] = $title;              
-                
-                $this->data['breadcrumbs'] = array();
-                $this->data['href'] = HTTP_SERVER;
-                
 
-		$this->data['breadcrumbs'][] = array(
-			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home'),			
-			'separator' => false
-		);
-                
-                $this->data['breadcrumbs'][] = array(
+		// АКЦИИ
+		if (isset($this->request->get['special'])) {
+			
+			$this->language->load('product/special');
+
+			$this->data['breadcrumbs'][] = array(
+       		'text'      => $this->language->get('heading_title'),
+			'href'      => $this->url->link('product/special', $url),
+      		'separator' => $this->language->get('text_separator')
+   			);
+			$special = true;
+		} else {
+			$special = false;
+		}
+
+            $this->data['breadcrumbs'][] = array(
         		'href'      => $this->url->link('product/AlphabeticallyProducts&char='.$char),
         		'text'      => $title,
         		'separator' => $this->language->get('text_separator')
@@ -120,7 +206,7 @@ if(isset($this->request->get['char'])){
       		$this->data['button_continue'] = $this->language->get('button_continue');
 			
 			$this->data['continue'] = (HTTP_SERVER . 'index.php?route=common/home');
-              $this->data['text_error'] = $this->language->get('text_error');
+            $this->data['text_error'] = $this->language->get('text_error');
 			$this->data['text_refine'] = $this->language->get('text_refine');
 			$this->data['text_empty'] = $this->language->get('text_empty');			
 			$this->data['text_quantity'] = $this->language->get('text_quantity');
@@ -149,25 +235,23 @@ if(isset($this->request->get['char'])){
 				'order'              => $order,
 				'start'              => ($page - 1) * $limit,
 				'limit'              => $limit,
-				'char'													=> $char
+				'filter_category_id' => $category_id,
+				'filter_manufacturer_id' => $manufacturer_id,
+				'filter_name'         => $filter_name, 
+				'filter_tag'          => $filter_tag, 
+				'filter_description'  => $filter_description,
+				'filter_sub_category' => $filter_sub_category,  
+				'char'				 => $char
 			);
+			if (!$special) {
+				$results = $this->model_catalog_AlphabeticallyProducts->getProducts($data);
+				$product_total = $this->model_catalog_AlphabeticallyProducts->getTotalProducts($data); 
+			} else {	
+				$results = $this->model_catalog_AlphabeticallyProducts->getProductsSpecials($data);
+				$product_total = $this->model_catalog_AlphabeticallyProducts->getTotalProductsSpecials($data);
+			}		
+			
 
-		$results = $this->model_catalog_AlphabeticallyProducts->getProducts($data);
-			$product_total = $this->model_catalog_AlphabeticallyProducts->getTotalProducts($data); 
-$rows = count($data,0);
-$cols = (count($data,1)/count($data,0))-1;			
-			
-	/*		
-			echo 'stroki=='.count($results,0);
-			echo '<br />stroki1=='.count($results1,0);
-				echo '<hr />stolbi=='.(int)((count($results,1)/count($results,0))-1);
-			echo '<br />stolbi1=='.(int)((count($results1,1)/count($results1,0))-1);
-			
-		*/	
-			
-/*			$product_total = $this->model_catalog_product->getTotalProducts($data); 
-			
-			$results = $this->model_catalog_product->getProducts($data);*/
 
 			foreach ($results as $result) {
 				if ($result['image']) {
@@ -213,18 +297,9 @@ $cols = (count($data,1)/count($data,0))-1;
 				);
 	
 			}
-			
-/*			foreach ($results1 as $result) {
-				
-				$this->data['products'][] = array(
-					'name'    => $result['name'],
-					'id'	=> $result['product_id'],
-                                        'image' => $this->model_tool_image->resize($result['image'], $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height'))
-				);
-				//print($this->data['testimonials']);
-			}*/
-			$url = '';
 	
+			$url = '';
+
 			if (isset($this->request->get['limit'])) {
 				$url .= '&limit=' . $this->request->get['limit'];
 			}
@@ -343,20 +418,15 @@ $cols = (count($data,1)/count($data,0))-1;
 				$url .= '&limit=' . $this->request->get['limit'];
 			}
 					
-	$pagination = new Pagination();
+			$pagination = new Pagination();
 			$pagination->total = $product_total;
 			$pagination->page = $page;
 			$pagination->limit = $limit;
 			$pagination->text = $this->language->get('text_pagination');
 			$pagination->url = $this->url->link('product/AlphabeticallyProducts&char='.$char, $url . '&page={page}');
 		
-// 	echo $product_total.' '.$page.' '.$limit.' '.$this->language->get('text_pagination').' '.$this->url->link('product/AlphabeticallyProducts&char='.$char, $url . '&page={page}');
-	
-	
-	
-	
-//////frbdertbherthbrth	
-	$this->data['pagination'] = $pagination->render();
+
+			$this->data['pagination'] = $pagination->render();
 		
 			$this->data['sort'] = $sort;
 			$this->data['order'] = $order;
@@ -435,7 +505,7 @@ $cols = (count($data,1)/count($data,0))-1;
 			);
 					
 			$this->response->setOutput($this->render());
-/////ergergergegegegegeg
+
         }
     }
 }
