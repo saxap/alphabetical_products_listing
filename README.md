@@ -1,4 +1,4 @@
-Alphabeticaly Products Listing by saxap (http://dontforget.pro)
+Alphabeticaly Products Filter and Listing
 ==============
 This is module for Opencart CMS (http://www.opencart.com/). Module display a row with letters of latin and russian alphabets, after click on letter shows products starting on this letter.
 
@@ -7,6 +7,8 @@ Capabilities:
 - Possibility to select how and what show
 
 - Possibility displaying only letters which have products on himself
+
+- Possibility filtering products by starting letter in category/manufacturer/search and special pages
 
 - Do not changes files of CMS
 
@@ -20,6 +22,4 @@ Install:
 
 ==============
 
-Works 100% on 1.5.3.1 or 1.5.4.1 and 90% on others)
-
-Additional description http://dontforget.pro/opencart/modul-vyivoda-tovarov-po-alfavitu-dlya-opencart/
+Tested on OpenCart versions: 1.5.3.1, 1.5.4.1, 1.5.5.1, 1.5.6.1
