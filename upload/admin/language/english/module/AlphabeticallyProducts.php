@@ -23,7 +23,7 @@ $_['cyrtxt']  = 'Cyrillic';
 $_['onlytxt'] = 'Show only letters having products on himself';
 $_['numtxt'] = 'Show numbers (0-9)';
 $_['linetxt'] = 'Show all letters inline';
-$_['from_currenttxt'] = 'Only in current *';
+$_['from_currenttxt'] = 'Filtering current products*';
 $_['from_currenttxt2'] = '* - Show products only for categoty/manufacturer/search or specials page where we are';
 $_['title'] = 'Module title:';
 
