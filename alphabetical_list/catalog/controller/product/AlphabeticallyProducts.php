@@ -131,7 +131,7 @@ class ControllerProductAlphabeticallyProducts extends Controller{
         }
 
         // ПОИСК
-        if (isset($this->request->get['filter_name']) || isset($this->request->get['filter_tag'])) {
+        if (isset($this->request->get['filter_name']) || isset($this->request->get['filter_tag']) || isset($this->request->get['search'])) {
         	$this->language->load('product/search');
 	        if (isset($this->request->get['filter_name'])) {
 				$filter_name = $this->request->get['filter_name'];
@@ -147,7 +147,15 @@ class ControllerProductAlphabeticallyProducts extends Controller{
 				$url .= '&filter_tag=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
 			} else {
 				$filter_tag = '';
-			} 					
+			} 		
+
+			if (isset($this->request->get['search'])) {
+				$filter_name = $this->request->get['search'];
+				$url .= '&search=' . urlencode(html_entity_decode($this->request->get['search'], ENT_QUOTES, 'UTF-8'));
+			} else {
+				$filter_name = '';
+			} 	
+
 			if (isset($this->request->get['filter_description'])) {
 				$filter_description = $this->request->get['filter_description'];
 				$url .= '&filter_description=' . $this->request->get['filter_description'];

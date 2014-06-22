@@ -37,6 +37,12 @@ class ControllerModuleAlphabeticallyProducts extends Controller{
 			} else {
 				$filter_name = false;
 			}
+			if (isset($this->request->get['search'])) {
+				$this->data['href'] .= '&search='.$this->request->get['search'];
+				$filter_name = $this->request->get['search'];
+			} else {
+				$filter_name = false;
+			}
 			if (isset($this->request->get['filter_tag'])) {
 				$this->data['href'] .= '&filter_tag='.$this->request->get['filter_tag'];
 				$filter_tag = $this->request->get['filter_tag'];

@@ -74,6 +74,7 @@
   </div>
   <?php } ?>
   <?php echo $content_bottom; ?></div>
+<script type="text/javascript" src="http://yandex.st/jquery/cookie/1.0/jquery.cookie.min.js"></script>
 <script type="text/javascript"><!--
 function display(view) {
 	if (view == 'list') {
