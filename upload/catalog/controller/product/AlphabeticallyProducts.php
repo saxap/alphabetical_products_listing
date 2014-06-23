@@ -5,7 +5,9 @@ class ControllerProductAlphabeticallyProducts extends Controller{
         
         $this->language->load('product/category');       
         $this->language->load('product/AlphabeticallyProducts');
-        $this->document->addScript('catalog/view/javascript/jquery/jquery.total-storage.min.js');
+        if(version_compare(VERSION, '1.5.4', '>')) {
+        	$this->document->addScript('catalog/view/javascript/jquery/jquery.total-storage.min.js');
+		}
         $this->load->model('catalog/AlphabeticallyProducts');
         $this->load->model('tool/image');
         
