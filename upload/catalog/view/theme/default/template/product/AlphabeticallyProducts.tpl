@@ -74,7 +74,7 @@
   </div>
   <?php } ?>
   <?php echo $content_bottom; ?></div>
-<script type="text/javascript" src="http://yandex.st/jquery/cookie/1.0/jquery.cookie.min.js"></script>
+  <script type="text/javascript" src="http://yandex.st/jquery/cookie/1.0/jquery.cookie.min.js"></script>
 <script type="text/javascript"><!--
 function display(view) {
 	if (view == 'list') {
@@ -117,8 +117,11 @@ function display(view) {
 		});		
 		
 		$('.display').html('<b><?php echo $text_display; ?></b> <?php echo $text_list; ?> <b>/</b> <a onclick="display(\'grid\');"><?php echo $text_grid; ?></a>');
-		
-		$.cookie('display', 'list'); 
+		if (jQuery.isFunction($.totalStorage)) {
+			$.totalStorage('display', 'list');
+		} else {
+			$.cookie('display', 'list'); 
+		}
 	} else {
 		$('.product-list').attr('class', 'product-grid');
 		
@@ -154,17 +157,23 @@ function display(view) {
 		});	
 					
 		$('.display').html('<b><?php echo $text_display; ?></b> <a onclick="display(\'list\');"><?php echo $text_list; ?></a> <b>/</b> <?php echo $text_grid; ?>');
-		
-		$.cookie('display', 'grid');
+		if (jQuery.isFunction($.totalStorage)) {
+			$.totalStorage('display', 'grid');
+		} else {
+			$.cookie('display', 'grid'); 
+		}
 	}
 }
-
-view = $.cookie('display');
+if (jQuery.isFunction($.totalStorage)) {
+	view = $.totalStorage('display');
+} else {
+	view = $.cookie('display');
+}
 
 if (view) {
 	display(view);
 } else {
-	display('list');
+	display('grid');
 }
 //--></script> 
 <?php echo $footer; ?>

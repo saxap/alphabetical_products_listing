@@ -5,6 +5,7 @@ class ControllerProductAlphabeticallyProducts extends Controller{
         
         $this->language->load('product/category');       
         $this->language->load('product/AlphabeticallyProducts');
+        $this->document->addScript('catalog/view/javascript/jquery/jquery.total-storage.min.js');
         $this->load->model('catalog/AlphabeticallyProducts');
         $this->load->model('tool/image');
         
@@ -96,8 +97,9 @@ class ControllerProductAlphabeticallyProducts extends Controller{
         			);
 				}
 			}		
-		
+			
 			$category_id = array_pop($parts);
+			$url .= '&category=' . $category_id;
 		} else {
 			$category_id = false;
 		}
@@ -125,6 +127,8 @@ class ControllerProductAlphabeticallyProducts extends Controller{
 	      			'separator' => $this->language->get('text_separator')
 	   			);
 	        }
+
+	        $url .= '&manufacturer=' . $manufacturer_id;
 
         } else {
         	$manufacturer_id = false;
@@ -305,8 +309,6 @@ class ControllerProductAlphabeticallyProducts extends Controller{
 				);
 	
 			}
-	
-			$url = '';
 
 			if (isset($this->request->get['limit'])) {
 				$url .= '&limit=' . $this->request->get['limit'];
@@ -369,8 +371,6 @@ class ControllerProductAlphabeticallyProducts extends Controller{
 				'value' => 'p.model-DESC',
 				'href'  => $this->url->link('product/AlphabeticallyProducts&char='.$char, '&sort=p.model&order=DESC' . $url)
 			);
-			
-			$url = '';
 	
 			if (isset($this->request->get['sort'])) {
 				$url .= '&sort=' . $this->request->get['sort'];
@@ -412,7 +412,6 @@ class ControllerProductAlphabeticallyProducts extends Controller{
 				'href'  => $this->url->link('product/AlphabeticallyProducts&char='.$char, $url . '&limit=100')
 			);
 						
-			$url = '';
 	
 			if (isset($this->request->get['sort'])) {
 				$url .= '&sort=' . $this->request->get['sort'];
@@ -442,10 +441,6 @@ class ControllerProductAlphabeticallyProducts extends Controller{
 		
 			$this->data['continue'] = $this->url->link('common/home');
 
-			
-
-
-
 			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/product/AlphabeticallyProducts.tpl')) {
 				$this->template = $this->config->get('config_template') . '/template/product/AlphabeticallyProducts.tpl';
 			} else {
@@ -463,7 +458,6 @@ class ControllerProductAlphabeticallyProducts extends Controller{
 				
 			$this->response->setOutput($this->render());										
     	} else {
-			$url = '';
 												
 			if (isset($this->request->get['sort'])) {
 				$url .= '&sort=' . $this->request->get['sort'];

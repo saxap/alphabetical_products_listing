@@ -76,6 +76,18 @@ class ControllerModuleAlphabeticallyProducts extends Controller{
 			}
 		}
 
+		if (isset($this->request->get['sort'])) {
+				$this->data['href'] .= '&sort=' . $this->request->get['sort'];
+			}	
+
+			if (isset($this->request->get['order'])) {
+				$this->data['href'] .= '&order=' . $this->request->get['order'];
+			}
+	
+			if (isset($this->request->get['limit'])) {
+				$this->data['href'] .= '&limit=' . $this->request->get['limit'];
+			}
+
 		$this->data['href'] .= '&char=';
 
 		if ( $this->config->get('only') == 0 ) {
