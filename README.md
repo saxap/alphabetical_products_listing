@@ -23,3 +23,5 @@ Install:
 ==============
 
 Tested on OpenCart versions: 1.5.3.1, 1.5.4.1, 1.5.5.1, 1.5.6.1
+
+2.x version tested on: OpenCart 2.2.0.0, ocStore 2.1.0.2.1, ocShop 2.0.3.1
