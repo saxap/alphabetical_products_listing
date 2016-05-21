@@ -374,6 +374,10 @@ class ControllerProductAlphabeticallyProducts extends Controller{
 			);
 
 			$url = '';
+			
+			if (isset($this->request->get['category'])) {
+				$url .= '&category=' . $this->request->get['category'];
+			}
 
 			if (isset($this->request->get['filter'])) {
 				$url .= '&filter=' . $this->request->get['filter'];
@@ -402,6 +406,10 @@ class ControllerProductAlphabeticallyProducts extends Controller{
 			}
 
 			$url = '';
+			
+			if (isset($this->request->get['category'])) {
+				$url .= '&category=' . $this->request->get['category'];
+			}
 
 			if (isset($this->request->get['filter'])) {
 				$url .= '&filter=' . $this->request->get['filter'];
